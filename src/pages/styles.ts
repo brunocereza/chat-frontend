@@ -16,10 +16,8 @@ export const Home = styled.section`
   position: fixed;
   background-image: linear-gradient(
     160deg,
-    rgba(213, 201, 254, 0.8),
-    rgba(150, 117, 254, 0.5),
-    rgba(111, 83, 197, 0.8),
-    rgba(43, 4, 169, 0.8)
+    rgba(213, 201, 254, 0.5),
+    rgba(150, 117, 254, 0.8)
   );
 `;
 
@@ -30,31 +28,16 @@ export const HomeContent = styled.div`
   justify-content: center;
   flex-direction: column;
   background-color: white;
-  width: 30%;
-  height: 60%;
+  width: 20rem;
+  height: 30rem;
   background-color: rgba(150, 117, 254, 0.1);
   border-radius: 10px;
-`;
-
-export const ButtonStyled = styled(TextField)`
-  margin-top: 1rem;
-  :focus {
-    color: red;
-    background-color: green;
+  @media (max-width: 350px) {
+    width: 90%;
+    overflow: scroll;
   }
-`;
-
-export const InputsGrid = styled.div`
-  display: flex;
-  width: 80%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-export const ButtonsGrid = styled.div`
-  padding: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @media (max-height: 500px) {
+    height: 90%;
+    overflow: scroll;
+  }
 `;
