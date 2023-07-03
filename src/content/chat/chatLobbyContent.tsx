@@ -2,49 +2,73 @@ import { AuthContext } from "@/context/auth";
 import { Button } from "@mui/material";
 import Router from "next/router";
 import { parseCookies } from "nookies";
-import { useContext, useEffect, useState } from "react";
-import { ChatContainer, MessageContainer, Title } from "./styles";
+import { useContext, useEffect, useRef, useState } from "react";
+import {
+  ChatContainer,
+  MessageContainer,
+  Title,
+  MessageBallon,
+  Author,
+} from "./styles";
 import io from "socket.io-client";
 
-interface ServerToClientEvents {
-  noArg: () => void;
-  basicEmit: (a: number, b: string, c: Buffer) => void;
-  withAck: (d: string, callback: (e: number) => void) => void;
-}
+type historicMessage = {
+  message: string;
+  author: string;
+};
 
-interface ClientToServerEvents {
-  hello: () => void;
-}
-
-interface InterServerEvents {
-  ping: () => void;
-}
-
-interface SocketData {
-  name: string;
-  age: number;
-}
+const mockMessage: historicMessage[] = [
+  {
+    message: "oi",
+    author: "bruno",
+  },
+  {
+    message: "oi",
+    author: "cereza",
+  },
+  {
+    message: "tudo bem?",
+    author: "bruno",
+  },
+  {
+    message: "indo e ai?",
+    author: "cereza",
+  },
+];
 
 export default function ChatLobbyContent() {
-  useEffect(() => {
-    const socket = io.connect("http://localhost:8899/", {
-      path: "/socket.io",
-    });
-
-    socket.on("connect", function (data: SocketData) {
-      socket.emit("join", JSON.stringify({}));
-    });
-  }, []);
-
   const { user } = useContext(AuthContext);
 
-  const [message, setMessage] = useState("");
+  const [messageToSend, setMessageToSend] = useState("");
+  const [messageReceived, setMessageToSendMessageReceived] = useState("");
 
-  useEffect(isLogged, []);
+  // socket.on("connect", function (data) {
+  const socket = io.connect("http://localhost:8899/", {
+    path: "/socket.io",
+    query: {
+      name: user,
+    },
+  });
+
+  // });
+  // socket.imit("clientSend", "aeee");
+
+  // recebe mensagem do server
+  socket.on("serverSend", (arg: historicMessage) => {
+    console.log(arg, "VINDO DO BACK"); // world
+    setMessageToSendMessageReceived(arg.message);
+  });
+
+  useEffect(() => {
+    isLogged;
+  }, []);
+
+  // useEffect(isLogged, []);
 
   function sendMessage() {
-    console.log(message);
-    setMessage("");
+    //envia mensagem pro back
+    socket.emit("hello", messageToSend);
+    setMessageToSend("");
   }
 
   function isLogged() {
@@ -58,28 +82,36 @@ export default function ChatLobbyContent() {
     <>
       <Title> Olá, {user} </Title>
       <ChatContainer>
-        CHAT HERE
-        <MessageContainer>
-          <input
-            value={message}
-            type="text"
-            onChange={(e) => setMessage(e.target.value)}
-          ></input>
-          <Button
-            style={{
-              backgroundColor: "white",
-              borderRadius: "8px",
-              padding: "1rem",
-              margin: "1%",
-            }}
-            size="medium"
-            variant="outlined"
-            onClick={sendMessage}
-          >
-            Enviar
-          </Button>
-        </MessageContainer>
+        {mockMessage.map((element) => (
+          <>
+            <MessageBallon>
+              <Author>{element.author}:</Author>
+              {element.message}
+            </MessageBallon>
+          </>
+        ))}
       </ChatContainer>
+      <MessageContainer>
+        <input
+          value={messageToSend}
+          type="text"
+          onChange={(e) => setMessageToSend(e.target.value)}
+        ></input>
+        <Button
+          style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            padding: "1rem",
+            margin: "1%",
+          }}
+          size="medium"
+          variant="outlined"
+          onClick={sendMessage}
+          disabled={!messageToSend}
+        >
+          Enviar
+        </Button>
+      </MessageContainer>
     </>
   );
 }
