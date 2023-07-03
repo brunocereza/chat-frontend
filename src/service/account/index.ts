@@ -1,8 +1,6 @@
-import axios from "axios";
-import { ICreateAccount } from "./type";
 import { axiosRequest } from "@/axios/axiosConfig";
-import { token } from "../token";
-import { log } from "console";
+import { auth } from "../auth";
+import { ICreateAccount } from "./type";
 
 const URLBASE = process.env.URLBASE;
 
@@ -15,9 +13,9 @@ type createAccount = {
 class Account implements ICreateAccount {
   public async create(params: createAccount): Promise<boolean> {
     try {
-      const apiToken = await token.generateGenericToken();
+      const apiToken = await auth.generateGenericToken();
 
-      await axiosRequest.createUser("/v1/user/create", params, apiToken);
+      await axiosRequest.createUser(params, apiToken);
 
       return true;
     } catch (error) {
