@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { TextFieldStyled, InputsGrid, Title, AlertContainer } from "./styles";
 import { Alert, Button, CircularProgress, Stack } from "@mui/material";
-import { ButtonsGrid } from "../home/styles";
-import { account } from "@/request/account";
+import { ButtonsGrid } from "./styles";
+import { account } from "@/service/account";
 import { contextAlert } from "@/context/alertaccountCreate";
 import { useRouter } from "next/router";
 

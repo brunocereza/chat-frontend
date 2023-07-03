@@ -1,10 +1,13 @@
 import Button from "@mui/material/Button";
-import { useState } from "react";
-import { TextFieldStyled, ButtonsGrid, InputsGrid, Title } from "./styles";
+import { useContext, useState } from "react";
+import { ButtonsGrid, InputsGrid, TextFieldStyled, Title } from "./styles";
+
+import { AuthContext } from "@/context/auth";
 
 export default function HomeContant() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
 
   function handleChangeUsername(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value);
@@ -12,6 +15,14 @@ export default function HomeContant() {
 
   function handleChangePassworld(event: React.ChangeEvent<HTMLInputElement>) {
     setPassword(event.target.value);
+  }
+
+  async function handleLogin() {
+    try {
+      await login({ username, password });
+    } catch (err) {
+      console.log(err, "erro de login");
+    }
   }
 
   return (
@@ -39,7 +50,7 @@ export default function HomeContant() {
           }}
           size="medium"
           variant="contained"
-          onClick={() => console.log(username, password)}
+          onClick={handleLogin}
         >
           Login
         </Button>
@@ -51,7 +62,6 @@ export default function HomeContant() {
             color: "purple",
           }}
           variant="contained"
-          onClick={() => console.log(username, password)}
         >
           Crie sua conta!
         </Button>

@@ -1,19 +1,19 @@
-import { AlertContainer } from "@/content/createAccount/styles";
-import { Alert } from "@mui/material";
+import { contextAlert } from "@/context/alertaccountCreate";
+import { AuthProvider } from "@/context/auth";
+import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { Home, HomeContent } from "./styles";
-import { ContextProvider, contextAlert } from "@/context/alertaccountCreate";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const { alertState } = contextAlert();
 
   return (
-    <ContextProvider>
+    <AuthProvider>
       <Home>
         <HomeContent>
           <Component {...pageProps} />
         </HomeContent>
       </Home>
-    </ContextProvider>
+    </AuthProvider>
   );
 }
